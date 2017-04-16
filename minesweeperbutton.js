@@ -40,8 +40,13 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 			}
 			else if (isLeft) 
 			{
+				console.log("asd: " + MineSweeper.grid);
 				document.body.style.backgroundColor = "green";
-				msbtn.style.backgroundImage = "Images/flagged.png";
+				if (MineSweeper.grid[this.rowIndex][0] === 1)
+				{
+					msbtn.style.backgroundImage = "url('Images/bomb.png')";
+					msbtn.style.backgroundSize = "cover";
+				}
 				
 			}
 		}
