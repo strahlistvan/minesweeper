@@ -1,4 +1,4 @@
-var msRows = 2;
+var msRows = 3;
 var msColumns = 5;
 var mineCount = 15;
 var targetDiv = null;
@@ -14,7 +14,6 @@ var MineSweeper = {
 	
 	generateGrid : function(rows, columns)
 	{
-		console.log(rows+" row " + columns + " columns");
 		this.grid = new Array(rows);
 		for (var i=0; i<rows; ++i)
 		{
@@ -29,10 +28,14 @@ var MineSweeper = {
 		var index = mineCount;
 		while (index != 0)
 		{
-			var rand = Math.round(Math.random()*(rows*columns));
-			if (this.grid[Math.floor(rand/rows)][Math.floor(rand)%rows] === 0)
+			var rand = Math.floor(Math.round(Math.random()*(rows*columns)));
+			var rowIndex = Math.floor(rand/rows) ; 
+			var colIndex = rand%rows;
+			console.log("row: "+rowIndex + " column: " + colIndex);
+			
+			if (this.grid[colIndex][rowIndex] === 0)
 			{
-				this.grid[Math.floor(rand/rows)][Math.floor(rand)%rows] = 1;
+				this.grid[colIndex][rowIndex] = 1;
 				--index;
 			}
 		}
@@ -66,7 +69,7 @@ var MineSweeper = {
 				var column = document.createElement("td");
 				row.appendChild(column);
 				
-				var msButton = new MineSweeperButton(i,j, false);
+				var msButton = new MineSweeperButton(i, j, false);
 				msButton.appendTo(column);
 			}
 			

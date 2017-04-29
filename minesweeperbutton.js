@@ -16,7 +16,7 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 		{
 			var isRight = false;
 			var isLeft = false;
-			
+					
 			if ("which" in evt)
 			{
 				isRight = (evt.which == 3);
@@ -40,9 +40,8 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 			}
 			else if (isLeft) 
 			{
-				console.log("asd: " + MineSweeper.grid);
 				document.body.style.backgroundColor = "green";
-				if (MineSweeper.grid[this.rowIndex][0] === 1)
+				if (MineSweeper.grid[rowIndex][columnIndex] === 1)
 				{
 					msbtn.style.backgroundImage = "url('Images/bomb.png')";
 					msbtn.style.backgroundSize = "cover";
