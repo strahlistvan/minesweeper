@@ -86,42 +86,68 @@ var MineSweeper = {
 		if (i<0 || j<0 || i>=this.grid.length || j>=this.grid[i].length)
 			return 0;
 		
-		//Bottom neighbour
+		//Top neighbour
 		if (i > 0 && this.grid[i-1][j] === 1)
+		{
+			console.log(i+' row '+j+' column Top neighbour');
 			++count;
-		
-		//Bottom right neighbour
+		}
+			
+		//Top right neighbour
 		if (i > 0 && j < this.grid[i-1].length - 1
 		    && this.grid[i-1][j+1] === 1)
+		{
+			console.log(i+' row '+j+' column Top Right neighbour');
 			++count;
+		}
 		
 		//Right neighbour
 		if (j < this.grid[i].length - 1 
 			&& this.grid[i][j+1] === 1)
+		{
+			console.log(i+' row '+j+' column Right neighbour');
 			++count;
+		}
 		
-		//Top right neighbour
+		//Bottom right neighbour
 		if (i < this.grid.length - 1 && j < this.grid[i+1].length - 1  
 			&& this.grid[i+1][j+1] === 1)
-			++count;
+			{
+				console.log(i+' row '+j+' column Bottom Right neighbour');
+				++count;
+			}
 		
-		//Top neighbour
+		//Bottom neighbour
 		if (i < this.grid.length - 1
 			&& this.grid[i+1][j] === 1)
-			++count;
-		
-		//Top left neighbour
-		if (i < this.grid.length - 1 && j > 0
-			&& this.grid[i+1][j-1] === 1)
-			++count;
-			
-		//Left neighbour
-		if (j > 0 && this.grid[i][j-1] === 1)
-			++count;
+			{
+				console.log(i+' row '+j+' column Bottom neighbour');
+				++count;
+			}
+
 		
 		//Bottom left neighbour
-		if (i> 0 && j> 0 && this.grid[i-1][i-1])
+		if (i < this.grid.length - 1 && j > 0
+			&& this.grid[i+1][j-1] === 1)
+		{
+			console.log(i+' row '+j+' column Bottom Left neighbour');
 			++count;
+		}
+
+			
+		//Left neighbour
+		if (j > 0 && this.grid[i][j-1] === 1) 
+		{
+			console.log(i+' row '+j+' column Left neighbour');
+			++count;
+		}
+		
+		//Top left neighbour
+		if (i > 0 && j > 0 && this.grid[i-1][i-1] === 1) 
+		{
+			console.log(i+' row '+j+' column Top Left neighbour');
+			++count;
+		}
 		
 		return count;
 	}
