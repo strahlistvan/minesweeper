@@ -1,9 +1,8 @@
 function MineSweeperButton(rowIndex, columnIndex, hasMine) 
 {
-	this.rowIndex = rowIndex;
-	this.columnIndex = columnIndex;
-	this.hasMine = hasMine;
-	
+	var flagged = false;
+	var opened = false;
+		
 	this.appendTo = function(parentElement) 
 	{
 		var msbtn = document.createElement("div");
@@ -28,25 +27,47 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 				isLeft = (evt.button == 1);
 			}
 			
-			if (isRight) 
+			if (isRight && !flagged && !opened) 
 			{
 				document.body.style.backgroundColor = "yellow";
 				msbtn.style.backgroundImage = "url('Images/flagged.png')";
 				msbtn.style.backgroundSize = "cover";
 				
 				--MineSweeper.remainingMines;
+				flagged = true;
+				
 				console.log("Mines left: " + MineSweeper.remainingMines);
-
 			}
 			else if (isLeft) 
 			{
 				document.body.style.backgroundColor = "green";
-				if (MineSweeper.grid[rowIndex][columnIndex] === 1)
-				{
-					msbtn.style.backgroundImage = "url('Images/bomb.png')";
-					msbtn.style.backgroundSize = "cover";
-				}
 				
+				if (!flagged)
+				{
+					if (MineSweeper.grid[rowIndex][columnIndex] === 1)
+					{
+						msbtn.style.backgroundImage = "url('Images/bomb.png')";
+						msbtn.style.backgroundSize = "cover";
+						opened = 1;
+					}
+					else
+					{
+						var neighbourCount = MineSweeper.countNeigbourMines(rowIndex, columnIndex);
+						
+						msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+						msbtn.style.backgroundSize = "cover";
+						opened = 1;
+						
+					}
+				}
+				else //remove flag
+				{
+					msbtn.style.backgroundImage = "none";
+					++MineSweeper.remainingMines;
+					flagged = false;
+					
+					console.log("Mines left: " + MineSweeper.remainingMines);
+				}
 			}
 		}
 		parentElement.appendChild(msbtn);

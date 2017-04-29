@@ -1,6 +1,6 @@
-var msRows = 3;
+var msRows = 6;
 var msColumns = 5;
-var mineCount = 15;
+var mineCount = 4;
 var targetDiv = null;
 
 window.oncontextmenu = function() { 
@@ -76,5 +76,54 @@ var MineSweeper = {
 			table.appendChild(row);
 		}
 		targetDiv.appendChild(table);				
-	}	
+	},
+	
+	countNeigbourMines: function(i, j)
+	{
+		var count = 0;
+		
+		//If the position is not valid
+		if (i<0 || j<0 || i>=this.grid.length || j>=this.grid[i].length)
+			return 0;
+		
+		//Bottom neighbour
+		if (i > 0 && this.grid[i-1][j] === 1)
+			++count;
+		
+		//Bottom right neighbour
+		if (i > 0 && j < this.grid[i-1].length - 1
+		    && this.grid[i-1][j+1] === 1)
+			++count;
+		
+		//Right neighbour
+		if (j < this.grid[i].length - 1 
+			&& this.grid[i][j+1] === 1)
+			++count;
+		
+		//Top right neighbour
+		if (i < this.grid.length - 1 && j < this.grid[i+1].length - 1  
+			&& this.grid[i+1][j+1] === 1)
+			++count;
+		
+		//Top neighbour
+		if (i < this.grid.length - 1
+			&& this.grid[i+1][j] === 1)
+			++count;
+		
+		//Top left neighbour
+		if (i < this.grid.length - 1 && j > 0
+			&& this.grid[i+1][j-1] === 1)
+			++count;
+			
+		//Left neighbour
+		if (j > 0 && this.grid[i][j-1] === 1)
+			++count;
+		
+		//Bottom left neighbour
+		if (i> 0 && j> 0 && this.grid[i-1][i-1])
+			++count;
+		
+		return count;
+	}
+	
 }
