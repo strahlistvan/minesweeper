@@ -2,10 +2,12 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 {
 	var flagged = false;
 	var opened = false;
-		
+	
+	var msbtn = document.createElement("div");
+
+	
 	this.appendTo = function(parentElement) 
 	{
-		var msbtn = document.createElement("div");
 	
 		msbtn.style.width = "40px";
 		msbtn.style.height = "40px";
@@ -56,8 +58,7 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 						
 						msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
 						msbtn.style.backgroundSize = "cover";
-						opened = 1;
-						
+						opened = true;
 					}
 				}
 				else //remove flag
