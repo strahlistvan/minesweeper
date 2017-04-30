@@ -1,10 +1,11 @@
-function MineSweeperButton(rowIndex, columnIndex, hasMine) 
+function MineSweeperField(rowIndex, columnIndex, hasMine) 
 {
 	var flagged = false;
 	var opened = false;
+	var hasMine = hasMine;
 	
-	var msbtn = document.createElement("div");
-
+	var msbtn = document.createElement("div");	
+	var self = this;
 	
 	this.appendTo = function(parentElement) 
 	{
@@ -46,19 +47,15 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 				
 				if (!flagged)
 				{
-					if (MineSweeper.grid[rowIndex][columnIndex] === 1)
-					{
+					if (MineSweeper.grid[rowIndex][columnIndex].hasMine)
+					{ //explode!
 						msbtn.style.backgroundImage = "url('Images/bomb.png')";
 						msbtn.style.backgroundSize = "cover";
 						opened = 1;
 					}
-					else
+					else //open field (no mine)
 					{
-						var neighbourCount = MineSweeper.countNeigbourMines(rowIndex, columnIndex);
-						
-						msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-						msbtn.style.backgroundSize = "cover";
-						opened = true;
+						MineSweeper.openField(self);
 					}
 				}
 				else //remove flag
@@ -73,4 +70,37 @@ function MineSweeperButton(rowIndex, columnIndex, hasMine)
 		}
 		parentElement.appendChild(msbtn);
 	}
+	
+	this.getButton = function()
+	{
+		return msbtn;
+	}
+	
+	this.isOpened = function()
+	{
+		return opened;
+	}
+	
+	this.setOpened = function(isOpened)
+	{
+		opened = isOpened;
+	}
+	
+	this.getRowIndex = function()
+	{
+		return rowIndex;
+	}
+	
+	this.getColumnIndex = function()
+	{
+		return columnIndex;
+	}
+	
+/*	this.openField = function() 
+	{				
+		msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+		msbtn.style.backgroundSize = "cover";
+		opened = true;
+	}
+*/
 }
