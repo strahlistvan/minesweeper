@@ -16,6 +16,9 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 		self.msbtn.class = "self.msbtn";
 		self.msbtn.onmousedown = function(evt) 
 		{
+			if (MineSweeper.isPlayerDied)
+				return;
+			
 			var isRight = false;
 			var isLeft = false;
 					
@@ -40,7 +43,6 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 				self.flagged = true;
 				
 				console.log("Mines left: " + MineSweeper.remainingMines);
-				//MineSweeper.repaintGrid("gameboard");
 				
 			}
 			else if (isLeft) 
@@ -51,17 +53,18 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 				{
 					if (MineSweeper.grid[rowIndex][columnIndex].hasMine)
 					{ //explode!
-					//	self.msbtn.style.backgroundImage = "url('Images/bomb.png')";
-					//	self.msbtn.style.backgroundSize = "cover";
+
+						var bangSound = new Audio("explosion.wav");
+						bangSound.play();
+						
+					    MineSweeper.isPlayerDied = true;
 						MineSweeper.openAllFields();
 						MineSweeper.makeSadFace();
-						//MineSweeper.repaintGrid("gameboard");
 
 					}
 					else //open field (no mine)
 					{
 						MineSweeper.openField(self.getRowIndex(), self.getColumnIndex());
-						//MineSweeper.repaintGrid("gameboard");
 					}
 				}
 				else //remove flag
@@ -71,7 +74,6 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 					flagged = false;
 					
 					console.log("Mines left: " + MineSweeper.remainingMines);
-					//MineSweeper.repaintGrid("gameboard");
 
 				}
 			}

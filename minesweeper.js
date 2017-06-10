@@ -10,6 +10,9 @@ window.oncontextmenu = function() {
 var MineSweeper = {
 	
 	remainingMines : mineCount,
+	isPlayerWin : false,
+	isPlayerDied : false,
+	isGameRunning : false,
 	grid : [],
 	
 	generateGrid : function(rows, columns)
@@ -50,6 +53,10 @@ var MineSweeper = {
 	
 	create: function(parentId)
 	{
+		this.isPlayerDied = false;
+		this.isPlayerWin = false;
+		this.isGameRunning = true;
+		
 		this.generateGrid(msRows, msColumns);
 		
 		targetDiv = null;
@@ -235,11 +242,20 @@ var MineSweeper = {
 		thSun.colSpan = Math.floor(msColumns - 2*Math.floor(msColumns/3));
 		
 		var smileyDiv = document.createElement("div");
-		smileyDiv.style.backgroundImage = "url('Images/smile.png')";
+		if (this.isPlayerDied)
+			smileyDiv.style.backgroundImage = "url('Images/sad.png')";
+		else if (this.isPlayerWin)
+			smileyDiv.style.backgroundImage = "url('Images/win.png')";
+		else
+			smileyDiv.style.backgroundImage = "url('Images/smile.png')";
+		
 		smileyDiv.style.backgroundSize = "cover";
 		smileyDiv.style.height = "50px";
 		smileyDiv.style.width = "50px";
 		smileyDiv.style.margin = "0 auto 0";
+		
+		smileyDiv.onclick = function() { this.create(targetDiv); }
+		
 		thSun.appendChild(smileyDiv);
 		
 		var thTime = document.createElement("th");
@@ -286,9 +302,6 @@ var MineSweeper = {
 			{
 				this.grid[x-1][y].opened = true;		
 				neighbourCount = MineSweeper.countNeigbourMines(x-1, y);
-
-				this.grid[x-1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-				this.grid[x-1][y].getButton().style.backgroundSize = "cover";
 				
 				if (MineSweeper.countNeigbourMines(x-1, y) === 0)
 					queue.push({x: x-1, y: y});
@@ -299,9 +312,6 @@ var MineSweeper = {
 				this.grid[x+1][y].opened = true;		
 				neighbourCount = MineSweeper.countNeigbourMines(x+1, y);
 				
-				this.grid[x+1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-				this.grid[x+1][y].getButton().style.backgroundSize = "cover";
-
 				if (MineSweeper.countNeigbourMines(x+1, y) === 0)
 					queue.push({x: x+1, y: y});
 
@@ -311,26 +321,58 @@ var MineSweeper = {
 			{
 				this.grid[x][y-1].opened = true;		
 				neighbourCount = MineSweeper.countNeigbourMines(x, y-1);
-				
-				this.grid[x][y-1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-				this.grid[x][y-1].getButton().style.backgroundSize = "cover";
-				
+								
 				if (MineSweeper.countNeigbourMines(x, y-1) === 0)
 					queue.push({x: x, y: y-1});
 			}
 			//bottom neighbour 			
-			if (y < this.grid.length-1 && !this.grid[x][y+1].opened )
+			if (y < this.grid[x].length-1 && !this.grid[x][y+1].opened )
 			{
 				this.grid[x][y+1].opened = true;		
 				neighbourCount = MineSweeper.countNeigbourMines(x, y+1);
 				
-				this.grid[x][y+1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-				this.grid[x][y+1].getButton().style.backgroundSize = "cover";
-
 				if (MineSweeper.countNeigbourMines(x, y+1) === 0)
 					queue.push({x: x, y: y+1});
 
 			}
+			//top left neighbour 
+			if (x > 0 && y > 0 && !this.grid[x-1][y-1].opened )
+			{
+				this.grid[x-1][y-1].opened = true;		
+				neighbourCount = MineSweeper.countNeigbourMines(x-1, y-1);
+				
+				if (MineSweeper.countNeigbourMines(x-1, y-1) === 0)
+					queue.push({x: x-1, y: y-1});
+			}
+			//top right neighbour 			
+			if (x < this.grid.length-1 && y > 0 && !this.grid[x+1][y-1].opened )
+			{
+				this.grid[x+1][y-1].opened = true;		
+				neighbourCount = MineSweeper.countNeigbourMines(x+1, y-1);
+				
+				if (MineSweeper.countNeigbourMines(x+1, y-1) === 0)
+					queue.push({x: x+1, y: y-1});
+
+			}
+			//bottom left neighbour 
+			if (x > 0 && y < this.grid[x].length-1 && !this.grid[x-1][y+1].opened )
+			{
+				this.grid[x-1][y+1].opened = true;		
+				neighbourCount = MineSweeper.countNeigbourMines(x-1, y+1);
+				
+				if (MineSweeper.countNeigbourMines(x-1, y+1) === 0)
+					queue.push({x: x-1, y: y+1});
+			}
+			//bottom right neighbour 			
+			if (x < this.grid.length-1 && y < this.grid[x].length-1 && !this.grid[x+1][y+1].opened )
+			{
+				this.grid[x+1][y+1].opened = true;		
+				neighbourCount = MineSweeper.countNeigbourMines(x+1, y+1);
+				
+				if (MineSweeper.countNeigbourMines(x+1, y+1) === 0)
+					queue.push({x: x+1, y: y+1});
+			}			
+
 		 //	console.log(JSON.stringify(queue));
 		}	
 	},
