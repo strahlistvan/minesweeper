@@ -1,6 +1,6 @@
-var msRows = 5;
-var msColumns = 8;
-var mineCount = 6;
+var msRows = 10;
+var msColumns = 10;
+var mineCount = 20;
 var targetDiv = null;
 
 window.oncontextmenu = function() { 
@@ -84,6 +84,44 @@ var MineSweeper = {
 		
 		table.appendChild(tbody);
 		targetDiv.appendChild(table);				
+	},
+	
+	repaintGrid: function(parentId) {
+		
+		targetDiv = null;
+		targetDiv = document.getElementById(parentId);
+		
+		if (!targetDiv) 
+			this.errorMessage("Failed to create MineSweeper. Element not found with ID "+parentId);
+		
+		targetDiv.innerHTML = '';
+	
+		var table = document.createElement("table");
+		
+		var thead = this.createHeader();
+		table.appendChild(thead);
+		
+		var tbody = document.createElement("tbody");
+		
+		for (var i=0; i<msRows; ++i)
+		{
+			var row = document.createElement("tr");
+			for (var j=0; j<msColumns; ++j)
+			{
+				var column = document.createElement("td");
+				row.appendChild(column);
+				
+				var msField = this.grid[i][j];
+				msField.appendTo(column);
+			}
+			
+			tbody.appendChild(row);
+		}
+		
+		table.appendChild(tbody);
+		targetDiv.appendChild(table);				
+		
+		console.log("repaint grid");
 	},
 	
 	countNeigbourMines: function(i, j)
@@ -194,29 +232,83 @@ var MineSweeper = {
 		return thead;
 	},
 	
-	openField: function(msField)
+	openField: function(row,  col)
 	{
-		
-		var row = msField.getRowIndex();
-		var col = msField.getColumnIndex();
+	//	var row = msField.getRowIndex();
+	//	var col = msField.getColumnIndex();
 		var neighbourCount = MineSweeper.countNeigbourMines(row, col);
-					
-		msField.getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-		msField.getButton().style.backgroundSize = "cover";
-		msField.opened = true;
+		console.log(neighbourCount);
 		
-		if (neighbourCount > 0)
-			return;
+		//msField.opened = true;
+		this.grid[row][col].opened = true;		
+
+		this.grid[row][col].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+		this.grid[row][col].getButton().style.backgroundSize = "cover";
+
+		console.log(this.grid[row][col].getButton());
 		
-	   console.log(row+","+col+" field is zero");
-		//Get all neighbours
-		var topNB = (row > 0) ? this.grid[row-1][col] : null;
-		var bottomNB = (row < this.grid.length - 1) ? this.grid[row+1][col] : null;
-//TODO: Blank areas (flood fill)	
-//		if (topNB && !topNB.isOpened())
-//			this.openField(topNB);
-//		if (bottomNB && !bottomNB.isOpened())
-//			this.openField(bottomNB);
+		var queue = [];
+		queue.push({x: row, y: col});
+		
+		
+		while (queue.length > 0)
+		{
+			var nextFieldCoord = queue.pop();
+			
+		//	var topNB = (row > 0) ? this.grid[row-1][col] : null;
+		//	var bottomNB = (row < this.grid.length - 1) ? this.grid[row+1][col] : null;
+		//	var rightNB = (col < this.grid[row].length - 1) ? this.grid[row][col+1] : null;
+		//	var leftNB = (col > 0) ? this.grid[row][col-1] : null;
+
+			var x = nextFieldCoord.x;
+			var y = nextFieldCoord.y;
+			
+			if (x > 0 && !this.grid[x-1][y].opened )
+			{
+				this.grid[x-1][y].opened = true;		
+
+				this.grid[x-1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x-1][y].getButton().style.backgroundSize = "cover";
+				
+				if (MineSweeper.countNeigbourMines(x-1, y) === 0)
+					queue.push({x: x-1, y: y});
+			}
+			if (x < this.grid.length-1 && !this.grid[x+1][y].opened )
+			{
+				this.grid[x+1][y].opened = true;		
+
+				this.grid[x+1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x+1][y].getButton().style.backgroundSize = "cover";
+
+				if (MineSweeper.countNeigbourMines(x+1, y) === 0)
+					queue.push({x: x+1, y: y});
+
+			}
+			
+			if (y > 0 && !this.grid[x][y-1].opened )
+			{
+				this.grid[x][y-1].opened = true;		
+
+				this.grid[x][y-1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x][y-1].getButton().style.backgroundSize = "cover";
+				
+				if (MineSweeper.countNeigbourMines(x, y-1) === 0)
+					queue.push({x: x, y: y-1});
+			}
+			if (y < this.grid.length-1 && !this.grid[x][y+1].opened )
+			{
+				this.grid[x][y+1].opened = true;		
+
+				this.grid[x][y+1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x][y+1].getButton().style.backgroundSize = "cover";
+
+				if (MineSweeper.countNeigbourMines(x, y+1) === 0)
+					queue.push({x: x, y: y+1});
+
+			}
+			
+			console.log(row+","+col+" field is zero");
+			console.log(JSON.stringify(queue));
+		}	
 	}
-	
 }

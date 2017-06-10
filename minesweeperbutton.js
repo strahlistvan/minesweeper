@@ -3,18 +3,18 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 	var flagged = false;
 	var opened = false;
 	var hasMine = hasMine;
-	
-	var msbtn = document.createElement("div");	
 	var self = this;
+	
+	this.msbtn = document.createElement("div")	
 	
 	this.appendTo = function(parentElement) 
 	{
 	
-		msbtn.style.width = "40px";
-		msbtn.style.height = "40px";
-		msbtn.style.backgroundColor = "lightgrey";
-		msbtn.class = "msbtn";
-		msbtn.onmousedown = function(evt) 
+		self.msbtn.style.width = "40px";
+		self.msbtn.style.height = "40px";
+		self.msbtn.style.backgroundColor = "lightgrey";
+		self.msbtn.class = "self.msbtn";
+		self.msbtn.onmousedown = function(evt) 
 		{
 			var isRight = false;
 			var isLeft = false;
@@ -33,8 +33,8 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 			if (isRight && !flagged && !opened) 
 			{
 				document.body.style.backgroundColor = "yellow";
-				msbtn.style.backgroundImage = "url('Images/flagged.png')";
-				msbtn.style.backgroundSize = "cover";
+				self.msbtn.style.backgroundImage = "url('Images/flagged.png')";
+				self.msbtn.style.backgroundSize = "cover";
 				
 				--MineSweeper.remainingMines;
 				flagged = true;
@@ -49,18 +49,19 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 				{
 					if (MineSweeper.grid[rowIndex][columnIndex].hasMine)
 					{ //explode!
-						msbtn.style.backgroundImage = "url('Images/bomb.png')";
-						msbtn.style.backgroundSize = "cover";
+						self.msbtn.style.backgroundImage = "url('Images/bomb.png')";
+						self.msbtn.style.backgroundSize = "cover";
 						opened = 1;
 					}
 					else //open field (no mine)
 					{
-						MineSweeper.openField(self);
+						MineSweeper.openField(self.getRowIndex(), self.getColumnIndex());
+						MineSweeper.repaintGrid("gameboard");
 					}
 				}
 				else //remove flag
 				{
-					msbtn.style.backgroundImage = "none";
+					self.msbtn.style.backgroundImage = "none";
 					++MineSweeper.remainingMines;
 					flagged = false;
 					
@@ -68,12 +69,12 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 				}
 			}
 		}
-		parentElement.appendChild(msbtn);
+		parentElement.appendChild(self.msbtn);
 	}
 	
 	this.getButton = function()
 	{
-		return msbtn;
+		return self.msbtn;
 	}
 	
 	this.isOpened = function()
@@ -96,10 +97,15 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 		return columnIndex;
 	}
 	
+	this.getNeighbourMinesCount = function()
+	{
+		return MineSweeper.countNeigbourMines(rowIndex, columnIndex);
+	}
+	
 /*	this.openField = function() 
 	{				
-		msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-		msbtn.style.backgroundSize = "cover";
+		self.msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+		self.msbtn.style.backgroundSize = "cover";
 		opened = true;
 	}
 */
