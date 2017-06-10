@@ -245,6 +245,10 @@ var MineSweeper = {
 		this.grid[row][col].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
 		this.grid[row][col].getButton().style.backgroundSize = "cover";
 
+		//if it's not empty, we don't need to flood fill
+		if (neighbourCount > 0)
+			return;
+		
 		console.log(this.grid[row][col].getButton());
 		
 		var queue = [];
@@ -267,7 +271,7 @@ var MineSweeper = {
 			{
 				this.grid[x-1][y].opened = true;		
 
-				this.grid[x-1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x-1][y].getButton().style.backgroundImage = "url('Images/0.png')";
 				this.grid[x-1][y].getButton().style.backgroundSize = "cover";
 				
 				if (MineSweeper.countNeigbourMines(x-1, y) === 0)
@@ -277,7 +281,7 @@ var MineSweeper = {
 			{
 				this.grid[x+1][y].opened = true;		
 
-				this.grid[x+1][y].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x+1][y].getButton().style.backgroundImage = "url('Images/0.png')";
 				this.grid[x+1][y].getButton().style.backgroundSize = "cover";
 
 				if (MineSweeper.countNeigbourMines(x+1, y) === 0)
@@ -289,7 +293,7 @@ var MineSweeper = {
 			{
 				this.grid[x][y-1].opened = true;		
 
-				this.grid[x][y-1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x][y-1].getButton().style.backgroundImage = "url('Images/0.png')";
 				this.grid[x][y-1].getButton().style.backgroundSize = "cover";
 				
 				if (MineSweeper.countNeigbourMines(x, y-1) === 0)
@@ -299,15 +303,13 @@ var MineSweeper = {
 			{
 				this.grid[x][y+1].opened = true;		
 
-				this.grid[x][y+1].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
+				this.grid[x][y+1].getButton().style.backgroundImage = "url('Images/0.png')";
 				this.grid[x][y+1].getButton().style.backgroundSize = "cover";
 
 				if (MineSweeper.countNeigbourMines(x, y+1) === 0)
 					queue.push({x: x, y: y+1});
 
 			}
-			
-			console.log(row+","+col+" field is zero");
 			console.log(JSON.stringify(queue));
 		}	
 	}
