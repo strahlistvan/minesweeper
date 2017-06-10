@@ -30,33 +30,38 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 				isLeft = (evt.button == 1);
 			}
 			
-			if (isRight && !flagged && !opened) 
+			if (isRight && !self.flagged && !self.opened) 
 			{
 				document.body.style.backgroundColor = "yellow";
-				self.msbtn.style.backgroundImage = "url('Images/flagged.png')";
-				self.msbtn.style.backgroundSize = "cover";
+			//	self.msbtn.style.backgroundImage = "url('Images/flagged.png')";
+			//	self.msbtn.style.backgroundSize = "cover";
 				
 				--MineSweeper.remainingMines;
-				flagged = true;
+				self.flagged = true;
 				
 				console.log("Mines left: " + MineSweeper.remainingMines);
+				//MineSweeper.repaintGrid("gameboard");
+				
 			}
 			else if (isLeft) 
 			{
 				document.body.style.backgroundColor = "green";
 				
-				if (!flagged)
+				if (!self.flagged)
 				{
 					if (MineSweeper.grid[rowIndex][columnIndex].hasMine)
 					{ //explode!
-						self.msbtn.style.backgroundImage = "url('Images/bomb.png')";
-						self.msbtn.style.backgroundSize = "cover";
-						opened = 1;
+					//	self.msbtn.style.backgroundImage = "url('Images/bomb.png')";
+					//	self.msbtn.style.backgroundSize = "cover";
+						MineSweeper.openAllFields();
+						MineSweeper.makeSadFace();
+						//MineSweeper.repaintGrid("gameboard");
+
 					}
 					else //open field (no mine)
 					{
 						MineSweeper.openField(self.getRowIndex(), self.getColumnIndex());
-						MineSweeper.repaintGrid("gameboard");
+						//MineSweeper.repaintGrid("gameboard");
 					}
 				}
 				else //remove flag
@@ -66,9 +71,13 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 					flagged = false;
 					
 					console.log("Mines left: " + MineSweeper.remainingMines);
+					//MineSweeper.repaintGrid("gameboard");
+
 				}
 			}
+			MineSweeper.repaintGrid("gameboard");
 		}
+		
 		parentElement.appendChild(self.msbtn);
 	}
 	
@@ -87,6 +96,16 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 		opened = isOpened;
 	}
 	
+	this.isFlagged = function()
+	{
+		return flagged;
+	}
+	
+	this.setFlagged = function(isFlagged)
+	{
+		flagged = isFlagged;
+	}
+	
 	this.getRowIndex = function()
 	{
 		return rowIndex;
@@ -101,12 +120,4 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 	{
 		return MineSweeper.countNeigbourMines(rowIndex, columnIndex);
 	}
-	
-/*	this.openField = function() 
-	{				
-		self.msbtn.style.backgroundImage = "url('Images/"+neighbourCount+".png')";
-		self.msbtn.style.backgroundSize = "cover";
-		opened = true;
-	}
-*/
 }
