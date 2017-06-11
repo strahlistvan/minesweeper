@@ -1,15 +1,16 @@
-function MineSweeperField(rowIndex, columnIndex, hasMine) 
+function MineSweeperField(rowIndex, columnIndex, hasMinePar) 
 {
 	var flagged = false;
 	var opened = false;
-	var hasMine = hasMine;
+	var hasMine = hasMinePar;
 	var self = this;
+	
+	console.log("hasMine="+hasMinePar + " hasmine=" + hasMine + " self.hasMine=" + self.hasMine);
 	
 	this.msbtn = document.createElement("div")	
 	
 	this.appendTo = function(parentElement) 
-	{
-	
+	{	
 		self.msbtn.style.width = "40px";
 		self.msbtn.style.height = "40px";
 		self.msbtn.style.backgroundColor = "lightgrey";
@@ -48,6 +49,23 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 			else if (isLeft) 
 			{
 				document.body.style.backgroundColor = "green";
+				
+				if (!MineSweeper.isGameRunning)
+				{
+					var counter = 0;
+					console.log("hasMine = "+hasMinePar+" neighbourmines="+self.getNeighbourMinesCount());
+					console.log("rows="+msRows+", columns="+msColumns);
+					if (hasMinePar || self.getNeighbourMinesCount() != 0
+					     )
+					{
+						console.log("itt kellene valamit tenni...");
+						MineSweeper.clearField(rowIndex, columnIndex);
+					//	MineSweeper.refillMines(rowIndex, columnIndex);
+
+					}
+					MineSweeper.isGameRunning = true;
+
+				}
 				
 				if (!self.flagged)
 				{
@@ -121,5 +139,10 @@ function MineSweeperField(rowIndex, columnIndex, hasMine)
 	this.getNeighbourMinesCount = function()
 	{
 		return MineSweeper.countNeigbourMines(rowIndex, columnIndex);
+	}
+	
+	this.isMineField = function()
+	{
+		return MineSweeper.grid[rowIndex][columnIndex].hasMine;
 	}
 }

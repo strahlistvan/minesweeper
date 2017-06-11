@@ -16,14 +16,15 @@ var MineSweeper = {
 	grid : [],
 	
 	generateGrid : function(rows, columns)
-	{
+	{		
 		this.grid = new Array(rows);
 		for (var i=0; i<rows; ++i)
 		{
 			this.grid[i] = new Array(columns);
 			for (var j=0; j<columns; ++j) 
 			{
-				this.grid[i][j] = new MineSweeperField(i, j, false);;
+				this.grid[i][j] = new MineSweeperField(i, j, false);
+				this.grid[i][j].hasMine = false;
 			}
 		}
 		
@@ -31,10 +32,14 @@ var MineSweeper = {
 		var index = mineCount;
 		while (index != 0)
 		{
-			var rand = Math.floor(Math.round(Math.random()*(rows*columns)));
-			var rowIndex = Math.floor(rand/rows) ; 
-			var colIndex = rand%rows;
-			console.log("row: "+rowIndex + " column: " + colIndex);
+			var rand = Math.floor(Math.round(Math.random()*(rows*columns))) ;
+			var rowIndex = Math.floor(rand/rows) -1 ; 
+			var colIndex = rand%rows - 1;
+			
+			rowIndex = (rowIndex < 0) ? 0 : rowIndex;
+			colIndex = (colIndex < 0) ? 0 : colIndex;
+			
+//			console.log("row: "+rowIndex + " column: " + colIndex);
 			
 			if (!this.grid[colIndex][rowIndex].hasMine)
 			{
@@ -42,7 +47,72 @@ var MineSweeper = {
 				--index;
 			}
 		}
-		console.log(this.grid);
+//		console.log(this.grid);
+	},
+	
+/*	refillMines: function(selectedRow, selectedCol)
+	{
+		var rows = this.grid.length;
+		var columns = this.grid[0].length;
+		
+		var counter = 0;
+		while ( ( this.grid[selectedRow][selectedCol].hasMine 
+			     || this.countNeigbourMines(selectedRow, selectedCol) > 0)
+			   && counter < 100 )
+		{
+
+			//generating mines into random places
+			var index = mineCount;
+			while (index != 0)
+			{
+			var rand = Math.floor(Math.round(Math.random()*(rows*columns))) ;
+			var rowIndex = Math.floor(rand/rows) -1 ; 
+			var colIndex = rand%rows - 1;
+			
+			rowIndex = (rowIndex < 0) ? 0 : rowIndex;
+			colIndex = (colIndex < 0) ? 0 : colIndex;
+				
+				console.log("colIndex=" + colIndex + "rowIndex=" + rowIndex);
+				if (!this.grid[rowIndex][colIndex].hasMine)
+				{
+					this.grid[rowIndex][colIndex].hasMine = true;
+					--index;
+				}
+			}
+		  ++counter;
+		}
+
+	},
+*/
+
+	clearField : function (selectedRow, selectedCol)
+	{
+		if ( selectedRow < 0 || selectedRow >= this.grid.length
+		     || selectedCol < 0 || selectedCol >= this.grid[0].length )
+			return;
+		
+		console.log("selected row has mine: " || this.grid[selectedRow][selectedCol].hasMine);
+		if (!this.grid[selectedRow][selectedCol].hasMine)
+			return;
+			
+		var findPlace = false;
+		
+		for (var i=0; i<this.grid.length && !findPlace; ++i)
+		{
+			for (var j=0; j<this.grid[i].length && !findPlace; ++j)
+			{
+				if (i!=selectedRow && j!=selectedCol && !this.grid[i][j].hasMine)
+				{
+					console.log("("+selectedRow+","+selectedCol+") -> ("+i+","+j+")");
+					
+					this.grid[i][j].hasMine = true;
+					findPlace = true;
+				}
+			}
+		}
+			
+		if (findPlace)
+			this.grid[selectedRow][selectedCol].hasMine = false;
 	},
 	
 	errorMessage : function(errorText)
@@ -55,7 +125,7 @@ var MineSweeper = {
 	{
 		this.isPlayerDied = false;
 		this.isPlayerWin = false;
-		this.isGameRunning = true;
+		//this.isGameRunning = true;
 		
 		this.generateGrid(msRows, msColumns);
 		
@@ -163,7 +233,7 @@ var MineSweeper = {
 		//Top neighbour
 		if (i > 0 && this.grid[i-1][j].hasMine)
 		{
-			console.log(i+' row '+j+' column Top neighbour');
+//			console.log(i+' row '+j+' column Top neighbour');
 			++count;
 		}
 			
@@ -171,7 +241,7 @@ var MineSweeper = {
 		if (i > 0 && j < this.grid[i-1].length - 1
 		    && this.grid[i-1][j+1].hasMine)
 		{
-			console.log(i+' row '+j+' column Top Right neighbour');
+//			console.log(i+' row '+j+' column Top Right neighbour');
 			++count;
 		}
 		
@@ -179,7 +249,7 @@ var MineSweeper = {
 		if (j < this.grid[i].length - 1 
 			&& this.grid[i][j+1].hasMine)
 		{
-			console.log(i+' row '+j+' column Right neighbour');
+//			console.log(i+' row '+j+' column Right neighbour');
 			++count;
 		}
 		
@@ -187,7 +257,7 @@ var MineSweeper = {
 		if (i < this.grid.length - 1 && j < this.grid[i+1].length - 1  
 			&& this.grid[i+1][j+1].hasMine)
 			{
-				console.log(i+' row '+j+' column Bottom Right neighbour');
+//				console.log(i+' row '+j+' column Bottom Right neighbour');
 				++count;
 			}
 		
@@ -195,7 +265,7 @@ var MineSweeper = {
 		if (i < this.grid.length - 1
 			&& this.grid[i+1][j].hasMine)
 			{
-				console.log(i+' row '+j+' column Bottom neighbour');
+//				console.log(i+' row '+j+' column Bottom neighbour');
 				++count;
 			}
 	
@@ -203,21 +273,21 @@ var MineSweeper = {
 		if (i < this.grid.length - 1 && j > 0
 			&& this.grid[i+1][j-1].hasMine)
 		{
-			console.log(i+' row '+j+' column Bottom Left neighbour');
+//			console.log(i+' row '+j+' column Bottom Left neighbour');
 			++count;
 		}
 			
 		//Left neighbour
 		if (j > 0 && this.grid[i][j-1].hasMine) 
 		{
-			console.log(i+' row '+j+' column Left neighbour');
+//			console.log(i+' row '+j+' column Left neighbour');
 			++count;
 		}
 		
 		//Top left neighbour
 		if (i > 0 && j > 0 && this.grid[i-1][j-1].hasMine) 
 		{
-			console.log(i+' row '+j+' column Top Left neighbour');
+//			console.log(i+' row '+j+' column Top Left neighbour');
 			++count;
 		}
 		
@@ -394,6 +464,6 @@ var MineSweeper = {
 	makeSadFace : function()
 	{
 		document.getElementById("sunhead").style.backgroundImage = "url('Images/sad.png')";
-		console.log("sad face... you are died");
+//		console.log("sad face... you are died");
 	}
 }
