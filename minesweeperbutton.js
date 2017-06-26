@@ -35,24 +35,25 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				isLeft = (evt.button == 1);
 			}
 			
-			if (isRight && !self.flagged && !self.opened) 
-			{
-				document.body.style.backgroundColor = "yellow";
-			//	self.msbtn.style.backgroundImage = "url('Images/flagged.png')";
-			//	self.msbtn.style.backgroundSize = "cover";
-				
-				--MineSweeper.remainingMines;
-				self.flagged = true;
-				
-				console.log("Mines left: " + MineSweeper.remainingMines);
-				
-			}
-			else if (isRight && self.flagged == true)
+			/** Handling click actions **/
+			
+			if (self.flagged)
 			{
 				console.log("aélsdfkjsdf")
 				self.flagged = false;
+				++MineSweeper.remainingMines;
 			}
-			
+			else if (isRight && !self.flagged && !self.opened) 
+			{
+			//	document.body.style.backgroundColor = "yellow";
+				
+				--MineSweeper.remainingMines;
+				self.flagged = true;
+				MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
+
+				console.log("Mines left: " + MineSweeper.remainingMines);
+				
+			}
 			else if (isLeft) 
 			{
 				document.body.style.backgroundColor = "green";
@@ -105,7 +106,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				}
 			}
 			//if (MineSweeper.isGameRunning)
-			  MineSweeper.repaintGrid("gameboard");
+			MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
 		}
 		
 		parentElement.appendChild(self.msbtn);

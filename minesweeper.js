@@ -67,41 +67,6 @@ var MineSweeper = {
 //		console.log(this.grid);
 	},
 	
-/*	refillMines: function(selectedRow, selectedCol)
-	{
-		var rows = this.grid.length;
-		var columns = this.grid[0].length;
-		
-		var counter = 0;
-		while ( ( this.grid[selectedRow][selectedCol].hasMine 
-			     || this.countNeigbourMines(selectedRow, selectedCol) > 0)
-			   && counter < 100 )
-		{
-
-			//generating mines into random places
-			var index = mineCount;
-			while (index != 0)
-			{
-			var rand = Math.floor(Math.round(Math.random()*(rows*columns))) ;
-			var rowIndex = Math.floor(rand/rows) -1 ; 
-			var colIndex = rand%rows - 1;
-			
-			rowIndex = (rowIndex < 0) ? 0 : rowIndex;
-			colIndex = (colIndex < 0) ? 0 : colIndex;
-				
-				console.log("colIndex=" + colIndex + "rowIndex=" + rowIndex);
-				if (!this.grid[rowIndex][colIndex].hasMine)
-				{
-					this.grid[rowIndex][colIndex].hasMine = true;
-					--index;
-				}
-			}
-		  ++counter;
-		}
-
-	},
-*/
-
 	clearField : function (selectedRow, selectedCol)
 	{
 		if ( selectedRow < 0 || selectedRow >= this.grid.length
@@ -235,6 +200,10 @@ var MineSweeper = {
 						this.grid[i][j].getButton().style.backgroundSize = "cover";	
 					}
 
+				}
+				else
+				{
+					this.grid[i][j].getButton().style.backgroundImage = "none";
 				}
 	
 				//var msField = this.grid[i][j];
@@ -493,14 +462,17 @@ var MineSweeper = {
 				this.grid[i][j].opened = true;
 			//	console.log("("+i+", "+j+").is_opened="+this.grid[i][j].isOpened());
 			}
-		}
-		
-		//this.repaintGrid("gameboard");
+		}	
 	},
 	
 	makeSadFace : function()
 	{
 		document.getElementById("sunhead").style.backgroundImage = "url('Images/sad.png')";
 //		console.log("sad face... you are died");
+	},
+	
+	getTargetDiv : function()
+	{
+		return targetDiv.id;
 	}
 }
