@@ -1,6 +1,6 @@
 var msRows = 10;
 var msColumns = 10;
-var mineCount = 20;
+var mineCount = 10;
 var targetDiv = null;
 
 window.oncontextmenu = function() { 
@@ -27,8 +27,24 @@ var MineSweeper = {
 				this.grid[i][j].hasMine = false;
 			}
 		}
+		//this.placeMines();
+	},
+
+	//generating mines into random places
+	placeMines : function()
+	{
+		var rows = MineSweeper.grid.length;
+		var columns = MineSweeper.grid[0].length;
 		
-		//generating mines into random places
+		//clear all mines
+		for (var i=0; i<rows; ++i)
+		{
+			for (var j=0; j<columns; ++j)
+			{
+				this.grid[i][j].hasMine = false;
+			}
+		}
+			
 		var index = mineCount;
 		while (index != 0)
 		{
@@ -44,6 +60,7 @@ var MineSweeper = {
 			if (!this.grid[colIndex][rowIndex].hasMine)
 			{
 				this.grid[colIndex][rowIndex].hasMine = true;
+			//	console.log('('+colIndex+', '+rowIndex+') has Mine');
 				--index;
 			}
 		}
@@ -91,8 +108,13 @@ var MineSweeper = {
 		     || selectedCol < 0 || selectedCol >= this.grid[0].length )
 			return;
 		
-		console.log("selected row has mine: " || this.grid[selectedRow][selectedCol].hasMine);
-		if (!this.grid[selectedRow][selectedCol].hasMine)
+		console.log("selected row has mine: " || this.isMineField(selectedRow, selectedCol));
+		console.log("selected row has flagged: " || this.grid[selectedRow][selectedCol].flagged);
+		console.log("selected row has opened: " || this.grid[selectedRow][selectedCol].opened);
+		console.log("kiválasztott róuóu ="+JSON.stringify(this.grid[selectedRow][selectedCol]));
+
+		
+		if (!this.grid[selectedRow][selectedCol].isMineField())
 			return;
 			
 		var findPlace = false;
@@ -167,6 +189,11 @@ var MineSweeper = {
 		
 		targetDiv = null;
 		targetDiv = document.getElementById(parentId);
+
+		console.log("selected row has mine: " || this.isMineField(selectedRow, selectedCol));
+		console.log("selected row has flagged: " || this.grid[selectedRow][selectedCol].flagged);
+		console.log("selected row has opened: " || this.grid[selectedRow][selectedCol].opened);
+
 		
 		if (!targetDiv) 
 			this.errorMessage("Failed to create MineSweeper. Element not found with ID "+parentId);
@@ -292,6 +319,16 @@ var MineSweeper = {
 		}
 		
 		return count;
+	},
+	
+	isMineField : function(i, j)
+	{
+		//If the position is not valid
+		if (i<0 || j<0 || i>=this.grid.length || j>=this.grid[i].length)
+			return 0;
+		
+		return this.grid[i][j].hasMine;
+		
 	},
 	
 	createHeader: function()

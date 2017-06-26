@@ -1,13 +1,14 @@
 function MineSweeperField(rowIndex, columnIndex, hasMinePar) 
 {
-	var flagged = false;
-	var opened = false;
-	var hasMine = hasMinePar;
+	this.flagged = false;
+	this.opened = false;
+	this.hasMine = hasMinePar;
+	
 	var self = this;
 	
-	console.log("hasMine="+hasMinePar + " hasmine=" + hasMine + " self.hasMine=" + self.hasMine);
+	//console.log("hasMine="+hasMinePar + " hasmine=" + this.hasMine + " self.hasMine=" + self.hasMine);
 	
-	this.msbtn = document.createElement("div")	
+	this.msbtn = document.createElement("div");
 	
 	this.appendTo = function(parentElement) 
 	{	
@@ -46,23 +47,31 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				console.log("Mines left: " + MineSweeper.remainingMines);
 				
 			}
+			else if (isRight && self.flagged == true)
+			{
+				console.log("aélsdfkjsdf")
+				self.flagged = false;
+			}
+			
 			else if (isLeft) 
 			{
 				document.body.style.backgroundColor = "green";
 				
 				if (!MineSweeper.isGameRunning)
 				{
-					var counter = 0;
 					console.log("hasMine = "+hasMinePar+" neighbourmines="+self.getNeighbourMinesCount());
 					console.log("rows="+msRows+", columns="+msColumns);
-					if (hasMinePar || self.getNeighbourMinesCount() != 0
-					     )
-					{
+					var cycle = 0; //to avoid infinite loops
+					do {
 						console.log("itt kellene valamit tenni...");
 						MineSweeper.clearField(rowIndex, columnIndex);
-					//	MineSweeper.refillMines(rowIndex, columnIndex);
+						MineSweeper.placeMines();
 
-					}
+						console.log("cycle = "+cycle++);
+					} while ( ( MineSweeper.isMineField(rowIndex, columnIndex) 
+							    || MineSweeper.countNeigbourMines(rowIndex, columnIndex) > 0 )
+							  && cycle < 10000 );
+					
 					MineSweeper.isGameRunning = true;
 
 				}
@@ -95,7 +104,8 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 
 				}
 			}
-			MineSweeper.repaintGrid("gameboard");
+			//if (MineSweeper.isGameRunning)
+			  MineSweeper.repaintGrid("gameboard");
 		}
 		
 		parentElement.appendChild(self.msbtn);
@@ -143,6 +153,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 	
 	this.isMineField = function()
 	{
-		return MineSweeper.grid[rowIndex][columnIndex].hasMine;
+		 return this.hasMine;
+		 return MineSweeper.isMineField(rowIndex, columnIndex);
 	}
 }
