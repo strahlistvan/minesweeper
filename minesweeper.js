@@ -1,6 +1,6 @@
 var msRows = 10;
 var msColumns = 10;
-var mineCount = 10;
+var mineCount = 5;
 var targetDiv = null;
 
 window.oncontextmenu = function() { 
@@ -73,11 +73,6 @@ var MineSweeper = {
 		     || selectedCol < 0 || selectedCol >= this.grid[0].length )
 			return;
 		
-		console.log("selected row has mine: " || this.isMineField(selectedRow, selectedCol));
-		console.log("selected row has flagged: " || this.grid[selectedRow][selectedCol].flagged);
-		console.log("selected row has opened: " || this.grid[selectedRow][selectedCol].opened);
-		console.log("kiválasztott róuóu ="+JSON.stringify(this.grid[selectedRow][selectedCol]));
-
 		
 		if (!this.grid[selectedRow][selectedCol].isMineField())
 			return;
@@ -89,9 +84,7 @@ var MineSweeper = {
 			for (var j=0; j<this.grid[i].length && !findPlace; ++j)
 			{
 				if (i!=selectedRow && j!=selectedCol && !this.grid[i][j].hasMine)
-				{
-					console.log("("+selectedRow+","+selectedCol+") -> ("+i+","+j+")");
-					
+				{					
 					this.grid[i][j].hasMine = true;
 					findPlace = true;
 				}
@@ -154,11 +147,6 @@ var MineSweeper = {
 		
 		targetDiv = null;
 		targetDiv = document.getElementById(parentId);
-
-		console.log("selected row has mine: " || this.isMineField(selectedRow, selectedCol));
-		console.log("selected row has flagged: " || this.grid[selectedRow][selectedCol].flagged);
-		console.log("selected row has opened: " || this.grid[selectedRow][selectedCol].opened);
-
 		
 		if (!targetDiv) 
 			this.errorMessage("Failed to create MineSweeper. Element not found with ID "+parentId);
@@ -183,7 +171,10 @@ var MineSweeper = {
 				
 				if (this.grid[i][j].flagged)
 				{
-					this.grid[i][j].getButton().style.backgroundImage = "url('Images/flagged.png')";
+					if (!this.grid[i][j].hasMine && +!this.isGameRunning)
+						this.grid[i][j].getButton().style.backgroundImage = "url('Images/flagged_false.png')";					
+					else
+						this.grid[i][j].getButton().style.backgroundImage = "url('Images/flagged.png')";
 					this.grid[i][j].getButton().style.backgroundSize = "cover";					
 				}
 				else if (this.grid[i][j].opened)
@@ -300,6 +291,21 @@ var MineSweeper = {
 		
 	},
 	
+	countOpenedFileds : function()
+	{
+		var count = 0;
+		for (var i=0; i<this.grid.length; ++i)
+		{
+			for (var j=0; j<this.grid[i].length; ++j)
+			{
+				if (this.grid[i][j].isOpened())
+					++count;
+			}
+		}
+		console.log("opened fields = " + count);
+		return count;
+	},
+	
 	createHeader: function()
 	{
 		var thead = document.createElement("thead");
@@ -321,7 +327,7 @@ var MineSweeper = {
 		if (this.isPlayerDied)
 			smileyDiv.style.backgroundImage = "url('Images/sad.png')";
 		else if (this.isPlayerWin)
-			smileyDiv.style.backgroundImage = "url('Images/win.png')";
+			smileyDiv.style.backgroundImage = "url('Images/win.jpg')";
 		else
 			smileyDiv.style.backgroundImage = "url('Images/smile.png')";
 		
@@ -465,14 +471,40 @@ var MineSweeper = {
 		}	
 	},
 	
-	makeSadFace : function()
+/*	makeSadFace : function()
 	{
 		document.getElementById("sunhead").style.backgroundImage = "url('Images/sad.png')";
 //		console.log("sad face... you are died");
 	},
 	
+	makeSunglassFace : function()
+	{
+		document.getElementById("sunhead").style.backgroundImage = "url('images/win.png')";
+		console.log("you are win :)");
+	},
+*/
+	
 	getTargetDiv : function()
 	{
 		return targetDiv.id;
+	},
+	
+	hasOpenableField : function()
+	{
+		for (var i=0; i<this.grid.length; ++i)
+		{
+			for (var j=0; j<this.grid[i].length; ++j) 
+			{
+				if (!this.grid[i][j].opened && !this.grid[i][j].hasMine)
+				{
+				
+					console.log('('+i+','+j+')'+ 'is openable')
+					return true;
+
+				}
+			}
+		}
+		console.log("No more openable field...");
+		return false;
 	}
 }

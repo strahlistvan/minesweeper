@@ -39,14 +39,11 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 			
 			if (self.flagged)
 			{
-				console.log("aélsdfkjsdf")
 				self.flagged = false;
 				++MineSweeper.remainingMines;
 			}
 			else if (isRight && !self.flagged && !self.opened) 
-			{
-			//	document.body.style.backgroundColor = "yellow";
-				
+			{				
 				--MineSweeper.remainingMines;
 				self.flagged = true;
 				MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
@@ -55,21 +52,18 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				
 			}
 			else if (isLeft) 
-			{
-				document.body.style.backgroundColor = "green";
-				
+			{				
 				if (!MineSweeper.isGameRunning)
 				{
-					console.log("hasMine = "+hasMinePar+" neighbourmines="+self.getNeighbourMinesCount());
-					console.log("rows="+msRows+", columns="+msColumns);
 					var cycle = 0; //to avoid infinite loops
-					do {
-						console.log("itt kellene valamit tenni...");
+					do 
+					{
 						MineSweeper.clearField(rowIndex, columnIndex);
 						MineSweeper.placeMines();
 
 						console.log("cycle = "+cycle++);
-					} while ( ( MineSweeper.isMineField(rowIndex, columnIndex) 
+					} 
+					while ( ( MineSweeper.isMineField(rowIndex, columnIndex) 
 							    || MineSweeper.countNeigbourMines(rowIndex, columnIndex) > 0 )
 							  && cycle < 10000 );
 					
@@ -87,7 +81,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 						
 					    MineSweeper.isPlayerDied = true;
 						MineSweeper.openAllFields();
-						MineSweeper.makeSadFace();
+						MineSweeper.isGameRunning = false;
 
 					}
 					else //open field (no mine)
@@ -105,6 +99,17 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 
 				}
 			}
+			// you win!
+			if (!MineSweeper.hasOpenableField() && MineSweeper.isGameRunning)
+			{
+				var winSound = new Audio("winner.wav");
+				winSound.play();
+				
+				MineSweeper.isPlayerWin = true;
+				MineSweeper.openAllFields();
+				MineSweeper.isGameRunning = false;
+			}
+			
 			//if (MineSweeper.isGameRunning)
 			MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
 		}
@@ -119,22 +124,22 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 	
 	this.isOpened = function()
 	{
-		return opened;
+		return self.opened;
 	}
 	
 	this.setOpened = function(isOpened)
 	{
-		opened = isOpened;
+		self.opened = isOpened;
 	}
 	
 	this.isFlagged = function()
 	{
-		return flagged;
+		return self.flagged;
 	}
 	
 	this.setFlagged = function(isFlagged)
 	{
-		flagged = isFlagged;
+		self.flagged = isFlagged;
 	}
 	
 	this.getRowIndex = function()
