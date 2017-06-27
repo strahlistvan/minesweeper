@@ -1,6 +1,6 @@
 var msRows = 10;
 var msColumns = 10;
-var mineCount = 5;
+var mineCount = 20;
 var targetDiv = null;
 
 window.oncontextmenu = function() { 
@@ -318,7 +318,9 @@ var MineSweeper = {
 		var thScore = document.createElement("th");
 		thScore.id = "scoreboard";
 		thScore.colSpan = Math.floor(msColumns/3);
-		thScore.innerHTML = MineSweeper.remainingMines;
+		var mineDiv = ScoreCounter.getScoreDivElement(MineSweeper.remainingMines); 
+		thScore.appendChild(mineDiv);
+		
 		
 		var thSun = document.createElement("th");
 		thSun.id = "sunhead";
