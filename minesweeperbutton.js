@@ -105,6 +105,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				var winSound = new Audio("winner.wav");
 				winSound.play();
 				
+				MineSweeper.remainingMines = 0;
 				MineSweeper.isPlayerWin = true;
 				MineSweeper.openAllFields();
 				MineSweeper.isGameRunning = false;

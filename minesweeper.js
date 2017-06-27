@@ -105,7 +105,8 @@ var MineSweeper = {
 	{
 		this.isPlayerDied = false;
 		this.isPlayerWin = false;
-		//this.isGameRunning = true;
+		this.isGameRunning = false;
+		this.remainingMines = mineCount;
 		
 		this.generateGrid(msRows, msColumns);
 		
@@ -317,7 +318,7 @@ var MineSweeper = {
 		var thScore = document.createElement("th");
 		thScore.id = "scoreboard";
 		thScore.colSpan = Math.floor(msColumns/3);
-		thScore.innerHTML = this.remainingMines;
+		thScore.innerHTML = MineSweeper.remainingMines;
 		
 		var thSun = document.createElement("th");
 		thSun.id = "sunhead";
@@ -336,7 +337,10 @@ var MineSweeper = {
 		smileyDiv.style.width = "50px";
 		smileyDiv.style.margin = "0 auto 0";
 		
-		smileyDiv.onclick = function() { this.create(targetDiv); }
+		smileyDiv.onclick = function() 
+		{ 
+			MineSweeper.create(targetDiv.id); 
+		}
 		
 		thSun.appendChild(smileyDiv);
 		
