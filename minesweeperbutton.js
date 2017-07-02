@@ -67,6 +67,9 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 							    || MineSweeper.countNeigbourMines(rowIndex, columnIndex) > 0 )
 							  && cycle < 10000 );
 					
+					//Start clock ticking...
+					console.log("isgamerunning false here");
+					TimeCounter.startClock();
 					MineSweeper.isGameRunning = true;
 
 				}

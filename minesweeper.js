@@ -349,7 +349,11 @@ var MineSweeper = {
 		var thTime = document.createElement("th");
 		thTime.id = "timeboard";
 		thTime.colSpan = Math.floor(msColumns/3);
-		thTime.innerHTML = "0:00"
+		
+		console.log("not counting yet: "+TimeCounter.isCounting);
+		thTime.appendChild(TimeCounter.getTimerDivElement());
+		
+		
 		
 		row.appendChild(thScore);
 		row.appendChild(thSun);

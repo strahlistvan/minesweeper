@@ -2,7 +2,6 @@ var ScoreCounter =
 {
 	targetDiv	 : null,
 	currentScore : 0,
-	self		 : this,
 	
 	getScoreDivElement : function(scoreParam)
 	{
