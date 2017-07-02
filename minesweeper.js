@@ -1,12 +1,15 @@
-var msRows = 10;
-var msColumns = 10;
-var mineCount = 20;
+/** Global variables to game options  */
+var msRows 	  = 12;
+var msColumns = 16;
+var mineCount = 8;
 var targetDiv = null;
 
-window.oncontextmenu = function() { 
+window.oncontextmenu = function() 
+{ 
 	return false; 
 }
 
+/** Main object */
 var MineSweeper = {
 	
 	remainingMines : mineCount,
@@ -30,7 +33,7 @@ var MineSweeper = {
 		//this.placeMines();
 	},
 
-	//generating mines into random places
+	/** Generating mines into random places */
 	placeMines : function()
 	{
 		var rows = MineSweeper.grid.length;
@@ -54,45 +57,13 @@ var MineSweeper = {
 			
 			rowIndex = (rowIndex < 0) ? 0 : rowIndex;
 			colIndex = (colIndex < 0) ? 0 : colIndex;
-			
-//			console.log("row: "+rowIndex + " column: " + colIndex);
-			
+						
 			if (!this.grid[colIndex][rowIndex].hasMine)
 			{
 				this.grid[colIndex][rowIndex].hasMine = true;
-			//	console.log('('+colIndex+', '+rowIndex+') has Mine');
 				--index;
 			}
 		}
-//		console.log(this.grid);
-	},
-	
-	clearField : function (selectedRow, selectedCol)
-	{
-		if ( selectedRow < 0 || selectedRow >= this.grid.length
-		     || selectedCol < 0 || selectedCol >= this.grid[0].length )
-			return;
-		
-		
-		if (!this.grid[selectedRow][selectedCol].isMineField())
-			return;
-			
-		var findPlace = false;
-		
-		for (var i=0; i<this.grid.length && !findPlace; ++i)
-		{
-			for (var j=0; j<this.grid[i].length && !findPlace; ++j)
-			{
-				if (i!=selectedRow && j!=selectedCol && !this.grid[i][j].hasMine)
-				{					
-					this.grid[i][j].hasMine = true;
-					findPlace = true;
-				}
-			}
-		}
-			
-		if (findPlace)
-			this.grid[selectedRow][selectedCol].hasMine = false;
 	},
 	
 	errorMessage : function(errorText)
@@ -101,6 +72,9 @@ var MineSweeper = {
 		console.log(errorText);
 	},
 	
+	/** Generate a Minesweeper table. Runs when the main page loading.
+	 *  @param parentId ID of the HTML element where you want to generate the game table
+	 */
 	create: function(parentId)
 	{
 		this.isPlayerDied = false;
@@ -144,8 +118,11 @@ var MineSweeper = {
 		targetDiv.appendChild(table);				
 	},
 	
-	repaintGrid: function(parentId) {
-		
+	/** Regenerate the MineSweeper table. Runs in every onmousedown event 
+	 *  @param parentId ID of the HTML element where you want to generate the game table
+	 */
+	repaintGrid: function(parentId) 
+	{	
 		targetDiv = null;
 		targetDiv = document.getElementById(parentId);
 		
@@ -198,7 +175,6 @@ var MineSweeper = {
 					this.grid[i][j].getButton().style.backgroundImage = "none";
 				}
 	
-				//var msField = this.grid[i][j];
 				this.grid[i][j].appendTo(column);
 			}
 			
@@ -206,10 +182,10 @@ var MineSweeper = {
 		}
 		
 		table.appendChild(tbody);
-		targetDiv.appendChild(table);				
-		
+		targetDiv.appendChild(table);						
 	},
 	
+	/** @return How many minefiled neighbours have the field in the ith row and the jth column */
 	countNeigbourMines: function(i, j)
 	{
 		var count = 0;
@@ -221,7 +197,6 @@ var MineSweeper = {
 		//Top neighbour
 		if (i > 0 && this.grid[i-1][j].hasMine)
 		{
-//			console.log(i+' row '+j+' column Top neighbour');
 			++count;
 		}
 			
@@ -229,7 +204,6 @@ var MineSweeper = {
 		if (i > 0 && j < this.grid[i-1].length - 1
 		    && this.grid[i-1][j+1].hasMine)
 		{
-//			console.log(i+' row '+j+' column Top Right neighbour');
 			++count;
 		}
 		
@@ -237,7 +211,6 @@ var MineSweeper = {
 		if (j < this.grid[i].length - 1 
 			&& this.grid[i][j+1].hasMine)
 		{
-//			console.log(i+' row '+j+' column Right neighbour');
 			++count;
 		}
 		
@@ -245,7 +218,6 @@ var MineSweeper = {
 		if (i < this.grid.length - 1 && j < this.grid[i+1].length - 1  
 			&& this.grid[i+1][j+1].hasMine)
 			{
-//				console.log(i+' row '+j+' column Bottom Right neighbour');
 				++count;
 			}
 		
@@ -253,7 +225,6 @@ var MineSweeper = {
 		if (i < this.grid.length - 1
 			&& this.grid[i+1][j].hasMine)
 			{
-//				console.log(i+' row '+j+' column Bottom neighbour');
 				++count;
 			}
 	
@@ -261,27 +232,25 @@ var MineSweeper = {
 		if (i < this.grid.length - 1 && j > 0
 			&& this.grid[i+1][j-1].hasMine)
 		{
-//			console.log(i+' row '+j+' column Bottom Left neighbour');
 			++count;
 		}
 			
 		//Left neighbour
 		if (j > 0 && this.grid[i][j-1].hasMine) 
 		{
-//			console.log(i+' row '+j+' column Left neighbour');
 			++count;
 		}
 		
 		//Top left neighbour
 		if (i > 0 && j > 0 && this.grid[i-1][j-1].hasMine) 
 		{
-//			console.log(i+' row '+j+' column Top Left neighbour');
 			++count;
 		}
 		
 		return count;
 	},
 	
+	/** check if the field in the ith row and the jth column has mine */
 	isMineField : function(i, j)
 	{
 		//If the position is not valid
@@ -292,6 +261,7 @@ var MineSweeper = {
 		
 	},
 	
+	/** Counts all the opened fields in the MineSweeper table */
 	countOpenedFileds : function()
 	{
 		var count = 0;
@@ -303,10 +273,13 @@ var MineSweeper = {
 					++count;
 			}
 		}
-		console.log("opened fields = " + count);
 		return count;
 	},
 	
+	/** Generate Minesweeper table header with mine counter, time counter and smiley sun.
+	 *   Runs when the main page loading and in every onmousedown event.
+ 	 *  @return HTML DOM <thead> object
+	 */
 	createHeader: function()
 	{
 		var thead = document.createElement("thead");
@@ -320,7 +293,6 @@ var MineSweeper = {
 		thScore.colSpan = Math.floor(msColumns/3);
 		var mineDiv = ScoreCounter.getScoreDivElement(MineSweeper.remainingMines); 
 		thScore.appendChild(mineDiv);
-		
 		
 		var thSun = document.createElement("th");
 		thSun.id = "sunhead";
@@ -342,6 +314,7 @@ var MineSweeper = {
 		smileyDiv.onclick = function() 
 		{ 
 			TimeCounter.stopClock();
+			TimeCounter.resetClock();
 			MineSweeper.create(targetDiv.id); 
 		}
 		
@@ -351,10 +324,7 @@ var MineSweeper = {
 		thTime.id = "timeboard";
 		thTime.colSpan = Math.floor(msColumns/3);
 		
-		console.log("not counting yet: "+TimeCounter.isCounting);
 		thTime.appendChild(TimeCounter.getTimerDivElement());
-		
-		
 		
 		row.appendChild(thScore);
 		row.appendChild(thSun);
@@ -365,11 +335,11 @@ var MineSweeper = {
 		return thead;
 	},
 	
-	openField: function(row,  col)
+	/** Opening the field. Runs in left click event. */
+	openField: function(row, col)
 	{
 		var neighbourCount = MineSweeper.countNeigbourMines(row, col);
 		
-		//msField.opened = true;
 		this.grid[row][col].opened = true;		
 
 		this.grid[row][col].getButton().style.backgroundImage = "url('Images/"+neighbourCount+".png')";
@@ -381,8 +351,7 @@ var MineSweeper = {
 		
 		var queue = [];
 		queue.push({x: row, y: col});
-		
-		
+			
 		while (queue.length > 0)
 		{
 			var nextFieldCoord = queue.pop();
@@ -465,11 +434,10 @@ var MineSweeper = {
 				if (MineSweeper.countNeigbourMines(x+1, y+1) === 0)
 					queue.push({x: x+1, y: y+1});
 			}			
-
-		 //	console.log(JSON.stringify(queue));
 		}	
 	},
 	
+	/** Open all fields in MineSweeper table */
 	openAllFields: function() 
 	{
 		for (var i=0; i<this.grid.length; ++i)
@@ -477,29 +445,18 @@ var MineSweeper = {
 			for (var j=0; j<this.grid[i].length; ++j) 
 			{
 				this.grid[i][j].opened = true;
-			//	console.log("("+i+", "+j+").is_opened="+this.grid[i][j].isOpened());
 			}
 		}	
 	},
-	
-/*	makeSadFace : function()
-	{
-		document.getElementById("sunhead").style.backgroundImage = "url('Images/sad.png')";
-//		console.log("sad face... you are died");
-	},
-	
-	makeSunglassFace : function()
-	{
-		document.getElementById("sunhead").style.backgroundImage = "url('images/win.png')";
-		console.log("you are win :)");
-	},
-*/
-	
+		
 	getTargetDiv : function()
 	{
 		return targetDiv.id;
 	},
 	
+	/** Check if is there any openable field in table
+   	 *  Openable = not opened and not contains mine
+	 */
 	hasOpenableField : function()
 	{
 		for (var i=0; i<this.grid.length; ++i)
@@ -508,14 +465,10 @@ var MineSweeper = {
 			{
 				if (!this.grid[i][j].opened && !this.grid[i][j].hasMine)
 				{
-				
-					console.log('('+i+','+j+')'+ 'is openable')
 					return true;
-
 				}
 			}
 		}
-		console.log("No more openable field...");
 		return false;
 	}
 }

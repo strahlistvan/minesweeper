@@ -69,11 +69,16 @@ var TimeCounter =
 		}, 1000);
 	},
 	
-	/** Clear the timer interval and set the timer to 00:00 */
+	/** Clear the timer interval, stops the clock*/
 	stopClock : function()
 	{
 		this.isCounting = false;
 		clearInterval(counterInterval);
+	},
+	
+	 /** Set the timer to 00:00 */
+	resetClock : function()
+	{
 		this.currentMinutes = this.currentSeconds = 0;
 	}
 	

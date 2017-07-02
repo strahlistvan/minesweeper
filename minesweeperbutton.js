@@ -5,9 +5,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 	this.hasMine = hasMinePar;
 	
 	var self = this;
-	
-	//console.log("hasMine="+hasMinePar + " hasmine=" + this.hasMine + " self.hasMine=" + self.hasMine);
-	
+		
 	this.msbtn = document.createElement("div");
 	
 	this.appendTo = function(parentElement) 
@@ -47,8 +45,6 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				--MineSweeper.remainingMines;
 				self.flagged = true;
 				MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
-
-				console.log("Mines left: " + MineSweeper.remainingMines);
 				
 			}
 			else if (isLeft) 
@@ -58,20 +54,15 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 					var cycle = 0; //to avoid infinite loops
 					do 
 					{
-						MineSweeper.clearField(rowIndex, columnIndex);
 						MineSweeper.placeMines();
-
-						console.log("cycle = "+cycle++);
 					} 
 					while ( ( MineSweeper.isMineField(rowIndex, columnIndex) 
 							    || MineSweeper.countNeigbourMines(rowIndex, columnIndex) > 0 )
 							  && cycle < 10000 );
 					
 					//Start clock ticking...
-					console.log("isgamerunning false here");
 					TimeCounter.startClock();
 					MineSweeper.isGameRunning = true;
-
 				}
 				
 				if (!self.flagged)
@@ -82,10 +73,10 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 						var bangSound = new Audio("explosion.wav");
 						bangSound.play();
 						
+						TimeCounter.stopClock();
 					    MineSweeper.isPlayerDied = true;
 						MineSweeper.openAllFields();
 						MineSweeper.isGameRunning = false;
-
 					}
 					else //open field (no mine)
 					{
@@ -97,9 +88,6 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 					self.msbtn.style.backgroundImage = "none";
 					++MineSweeper.remainingMines;
 					flagged = false;
-					
-					console.log("Mines left: " + MineSweeper.remainingMines);
-
 				}
 			}
 			// you win!
@@ -108,13 +96,13 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 				var winSound = new Audio("winner.wav");
 				winSound.play();
 				
+				TimeCounter.stopClock();
 				MineSweeper.remainingMines = 0;
 				MineSweeper.isPlayerWin = true;
 				MineSweeper.openAllFields();
 				MineSweeper.isGameRunning = false;
 			}
 			
-			//if (MineSweeper.isGameRunning)
 			MineSweeper.repaintGrid(MineSweeper.getTargetDiv());
 		}
 		
