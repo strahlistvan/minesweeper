@@ -341,6 +341,7 @@ var MineSweeper = {
 		
 		smileyDiv.onclick = function() 
 		{ 
+			TimeCounter.stopClock();
 			MineSweeper.create(targetDiv.id); 
 		}
 		
