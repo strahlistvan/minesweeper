@@ -8,6 +8,9 @@ var ScoreCounter =
 		var counterDiv = document.createElement("div");
 		counterDiv.id = "counter";
 		
+		if (scoreParam < 0)
+			scoreParam = 0;
+		
 		var num1 = Math.floor(scoreParam%1000/100);
 		var num1Img = document.createElement("img");
 		num1Img.src = "Images/score/"+num1+".bmp";

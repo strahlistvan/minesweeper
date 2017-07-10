@@ -9,11 +9,8 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 	this.msbtn = document.createElement("div");
 	
 	this.appendTo = function(parentElement) 
-	{	
-		self.msbtn.style.width = "40px";
-		self.msbtn.style.height = "40px";
-		self.msbtn.style.backgroundColor = "lightgrey";
-		self.msbtn.class = "self.msbtn";
+	{			
+		self.msbtn.className = "minefield";
 		self.msbtn.onmousedown = function(evt) 
 		{
 			if (MineSweeper.isPlayerDied)
@@ -34,6 +31,12 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 			}
 			
 			/** Handling click actions **/
+			if (isRight && !MineSweeper.isGameRunning)
+			{
+				alert("Press left click in a field to start game");
+				return;
+
+			}
 			
 			if (self.flagged)
 			{
@@ -72,6 +75,7 @@ function MineSweeperField(rowIndex, columnIndex, hasMinePar)
 
 						var bangSound = new Audio("explosion.wav");
 						bangSound.play();
+						MineSweeper.grid[rowIndex][columnIndex].getButton().style.backgroundColor = "red";
 						
 						TimeCounter.stopClock();
 					    MineSweeper.isPlayerDied = true;

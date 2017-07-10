@@ -1,0 +1,21 @@
+// I know nothing about CSS
+
+.minefield {
+	width: 40px;
+	height: 40px;
+	background-color: lightgrey;
+	cursor: pointer;
+}
+
+.minefield:hover {
+  background: #d6d6d6;
+  background-image: -webkit-linear-gradient(top, #d6d6d6, #abacad);
+  background-image: -moz-linear-gradient(top, #d6d6d6, #abacad);
+  background-image: -ms-linear-gradient(top, #d6d6d6, #abacad);
+  background-image: -o-linear-gradient(top, #d6d6d6, #abacad);
+  background-image: linear-gradient(to bottom, #d6d6d6, #abacad);
+}
+
+table {
+	margin: 20px auto;
+}

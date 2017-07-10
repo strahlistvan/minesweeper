@@ -1,7 +1,7 @@
 /** Global variables to game options  */
 var msRows 	  = 12;
 var msColumns = 16;
-var mineCount = 8;
+var mineCount = 20;
 var targetDiv = null;
 
 window.oncontextmenu = function() 
@@ -93,6 +93,7 @@ var MineSweeper = {
 		targetDiv.innerHTML = '';
 	
 		var table = document.createElement("table");
+		//table.className = "w3-table w3-border";
 		
 		var thead = this.createHeader();
 		table.appendChild(thead);
